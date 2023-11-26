@@ -45,9 +45,11 @@ def record(request):
     request_args = request.args
 
     if request_json and 'temperature' in request_json:
-        return record_data({'temperature': request_json['temperature']})
+        # return record_data({'temperature': request_json['temperature']})
+        return f"Temperature received ({request_json['temperature']})"
 
-    elif request_args and 'name' in request_args:
-        return record_data({'temperature': request_args['temperature']})
+    elif request_args and 'temperature' in request_args:
+        # return record_data({'temperature': request_args['temperature']})
+        return f"Temperature received ({request_args['temperature']})"
 
     return 'Try one more time ...'
