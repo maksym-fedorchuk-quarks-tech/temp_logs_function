@@ -46,10 +46,10 @@ def record(request):
 
     if request_json and 'temperature' in request_json:
         # return record_data({'temperature': request_json['temperature']})
-        return f"Temperature received ({request_json['temperature']})"
+        return f"Temperature received ({request_json['temperature']} degree)"
 
     elif request_args and 'temperature' in request_args:
         # return record_data({'temperature': request_args['temperature']})
-        return f"Temperature received ({request_args['temperature']})"
+        return f"Temperature received ({request_args['temperature']} degree)"
 
     return 'Try one more time ...'
