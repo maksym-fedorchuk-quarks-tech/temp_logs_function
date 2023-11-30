@@ -19,7 +19,7 @@ jobs:
 
       - name: Deploy to GCF
         run: |
-          gcloud functions deploy secrets.FUNCTION_NAME
+          gcloud functions deploy ${{ env.FUNCTION_NAME }}
           --gen2
           --service-account $IDENTITY_EMAIL
           --region=$FUNCTION_REGION
