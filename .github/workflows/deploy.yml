@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@main
+        uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.PROJECT_ID }}
           service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
@@ -19,7 +19,7 @@ jobs:
 
       - name: Deploy to GCF
         run: |
-          gcloud functions deploy $FUNCTION_NAME
+          gcloud functions deploy secrets.FUNCTION_NAME
           --gen2
           --service-account $IDENTITY_EMAIL
           --region=$FUNCTION_REGION
