@@ -28,7 +28,7 @@ jobs:
           --timeout=$FUNCTION_TIMEOUT
           --min-instances=0
           --max-instances=10
-          --entry-point=main
+          --entry-point=record
           --trigger-http
           --allow-unauthenticated
           --set-env-vars=PROJECT_ID=$PROJECT_ID
