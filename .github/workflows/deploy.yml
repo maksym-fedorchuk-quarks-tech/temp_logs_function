@@ -6,22 +6,33 @@ on:
 
 jobs:
   deploy:
-    name: deploy-gcf
-    runs-on: ubuntu-latest
+    name: 'deploy-gcf'
+    runs-on: 'ubuntu-latest'
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+
+      - name: 'Google auth'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
+
+      - name: 'Set up Cloud SDK'
+        id:
+        uses: 'google-github-actions/setup-gcloud@v1'
         with:
           project_id: ${{ secrets.PROJECT_ID }}
           service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
           export_default_credentials: true
 
-      - name: Deploy to GCF
+      - name: 'Deploy to GCF'
         run: |
-          gcloud functions deploy ${{ env.FUNCTION_NAME }}
+          gcloud functions deploy ${{ secrets.FUNCTION_NAME }}
           --gen2
-          --service-account $IDENTITY_EMAIL
+          --service-account ${{ secrets.IDENTITY_EMAIL }}
           --region=$FUNCTION_REGION
           --runtime=$FUNCTION_RUNTIME
           --memory=$FUNCTION_MEMORY
