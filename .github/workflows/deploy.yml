@@ -23,20 +23,18 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v1'
         with:
           project_id: ${{ secrets.PROJECT_ID }}
-          service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          export_default_credentials: true
 
       - name: 'Deploy to GCF'
         run: |
-          gcloud functions deploy temp_logs_function_v3
-          --gen2
-          --service-account ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          --region=europe-central2
-          --runtime=python311
-          --memory=256MB
-          --timeout=60s
-          --min-instances=0
-          --max-instances=2
-          --entry-point=record
-          --trigger-http
+          gcloud functions deploy temp_logs_function_v3 \
+          --gen2 \
+          --service-account ${{ secrets.SERVICE_ACCOUNT_KEY }} \
+          --region=europe-central2 \
+          --runtime=python311 \
+          --memory=256MB \
+          --timeout=60s \
+          --min-instances=0 \
+          --max-instances=2 \
+          --entry-point=record \
+          --trigger-http \
           --allow-unauthenticated
