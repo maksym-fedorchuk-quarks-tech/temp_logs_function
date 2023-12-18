@@ -27,31 +27,16 @@ jobs:
           export_default_credentials: true
 
       - name: 'Deploy to GCF'
-
-        variables:
-          FUNCTION_NAME: temp_logs_function_v3
-          DIRECTORY_NAME: temp_logs_function
-          FUNCTION_REGION: europe-central2
-          FUNCTION_RUNTIME: python311
-          FUNCTION_MEMORY: 256MB
-          FUNCTION_TIMEOUT: 60s
-          FUNCTION_ENTRY_POINT: main
-          FUNCTION_MIN_INSTANCES: 0
-          FUNCTION_MAX_INSTANCES: 1
-          FUNCTION_TRIGGER_TYPE: --trigger-http
-          #can be found here https://cloud.google.com/sdk/gcloud/reference/functions/deploy
-          FUNCTION_ADDITIONAL_PARAMS: --allow-unauthenticated
-
         run: |
-          gcloud functions deploy $FUNCTION_NAME
+          gcloud functions deploy temp_logs_function_v3
           --gen2
           --service-account ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          --region=$FUNCTION_REGION
-          --runtime=$FUNCTION_RUNTIME
-          --memory=$FUNCTION_MEMORY
-          --timeout=$FUNCTION_TIMEOUT
+          --region=europe-central2
+          --runtime=python311
+          --memory=256MB
+          --timeout=60s
           --min-instances=0
-          --max-instances=10
+          --max-instances=2
           --entry-point=record
           --trigger-http
           --allow-unauthenticated
