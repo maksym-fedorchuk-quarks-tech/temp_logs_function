@@ -1,44 +1,44 @@
-name: Deploy Google Function
-on:
-  push:
-    branches:
-      - master
+stages:
+  - temp_logs_function_v3_deploy
 
-jobs:
-  deploy:
-    name: 'deploy-gcf'
-    runs-on: 'ubuntu-latest'
-    steps:
-      - name: 'Checkout'
-        uses: 'actions/checkout@v3'
-
-
-      - name: 'Google auth'
-        id: 'auth'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
-          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
-
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
-        with:
-          project_id: ${{ secrets.PROJECT_ID }}
-          service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          export_default_credentials: true
-
-      - name: 'Deploy to GCF'
-        run: |
-          gcloud functions deploy ${{ secrets.FUNCTION_NAME }}
-          --gen2
-          --service-account ${{ secrets.IDENTITY_EMAIL }}
-          --region=$FUNCTION_REGION
-          --runtime=$FUNCTION_RUNTIME
-          --memory=$FUNCTION_MEMORY
-          --timeout=$FUNCTION_TIMEOUT
-          --min-instances=0
-          --max-instances=10
-          --entry-point=record
-          --trigger-http
-          --allow-unauthenticated
-          --set-env-vars=PROJECT_ID=$PROJECT_ID
+test_task_v1_deploy:
+  stage: temp_logs_function_v3_deploy
+  image: google/cloud-sdk:latest
+  variables:
+    FUNCTION_NAME: temp_logs_function_v3
+    DIRECTORY_NAME: temp_logs_function
+    FUNCTION_REGION: europe-central2
+    FUNCTION_RUNTIME: python311
+    FUNCTION_MEMORY: 256MB
+    FUNCTION_TIMEOUT: 60s
+    FUNCTION_ENTRY_POINT: main
+    FUNCTION_MIN_INSTANCES: 0
+    FUNCTION_MAX_INSTANCES: 1
+    FUNCTION_TRIGGER_TYPE: --trigger-http
+    #can be found here https://cloud.google.com/sdk/gcloud/reference/functions/deploy
+    FUNCTION_ADDITIONAL_PARAMS: --allow-unauthenticated
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+      changes: # Include the job and set to when:manual if any of the follow paths match a modified file.
+        - $DIRECTORY_NAME/*
+  script:
+    - PATH="google-cloud-sdk/bin:${PATH}"
+    - cd $DIRECTORY_NAME
+    # Authenticate using the service account stored here: https://gitlab.com/groups/{YOUR_GITLAB_PROJECT}/-/settings/ci_cd
+    - gcloud auth activate-service-account --key-file ${{ secrets.GCP_KEY_FILE }}
+    - gcloud config set project $PROJECT_ID
+    - gcloud functions deploy $FUNCTION_NAME
+                              --region=$FUNCTION_REGION
+                              --runtime=$FUNCTION_RUNTIME
+                              --memory=$FUNCTION_MEMORY
+                              --timeout=$FUNCTION_TIMEOUT
+                              --entry-point=$FUNCTION_ENTRY_POINT
+                              --min-instances=$FUNCTION_MIN_INSTANCES
+                              --max-instances=$FUNCTION_MAX_INSTANCES      
+                              $FUNCTION_TRIGGER_TYPE
+                              $FUNCTION_ADDITIONAL_PARAMS
+  when:
+    on:
+      push:
+        branches:
+          - master
