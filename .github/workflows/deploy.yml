@@ -1,7 +1,7 @@
 stages:
   - temp_logs_function_v3_deploy
 
-test_task_v1_deploy:
+temp_logs_function_v3_deploy:
   stage: temp_logs_function_v3_deploy
   image: google/cloud-sdk:latest
   variables:
@@ -37,8 +37,4 @@ test_task_v1_deploy:
                               --max-instances=$FUNCTION_MAX_INSTANCES      
                               $FUNCTION_TRIGGER_TYPE
                               $FUNCTION_ADDITIONAL_PARAMS
-  when:
-    on:
-      push:
-        branches:
-          - master
+  when: manual
