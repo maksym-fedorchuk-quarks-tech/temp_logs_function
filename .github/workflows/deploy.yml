@@ -25,7 +25,7 @@ jobs:
           project_id: ${{ secrets.PROJECT_ID }}
 
       - name: 'Deploy to GCF'
-        run: |
+        run: "-c" |
           gcloud functions deploy temp_logs_function_v3 \
           --gen2 \
           --service-account ${{ secrets.SERVICE_ACCOUNT_KEY }} \
