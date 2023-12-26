@@ -31,7 +31,7 @@ jobs:
           --service-account ${{ secrets.SERVICE_ACCOUNT_KEY }} \
           --region=europe-central2 \
           --runtime=python311 \
-          --memory=256MiB \
+          --memory=512MB \
           --timeout=60s \
           --min-instances=0 \
           --max-instances=2 \
