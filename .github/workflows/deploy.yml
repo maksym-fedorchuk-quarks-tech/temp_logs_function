@@ -38,4 +38,5 @@ jobs:
           --entry-point=record \
           --trigger-http \
           --allow-unauthenticated \
+          --clear-secrets \
           --set-env-vars 'FOO=bar','TABLE=${{ secrets.TABLE }}'
