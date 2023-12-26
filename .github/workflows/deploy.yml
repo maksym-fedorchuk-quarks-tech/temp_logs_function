@@ -26,15 +26,16 @@ jobs:
 
       - name: 'Deploy to GCF'
         run: |
-          gcloud functions deploy temp_logs_function_v3 \
+          gcloud functions deploy sensor-data-transfer \
           --gen2 \
           --service-account ${{ secrets.SERVICE_ACCOUNT_KEY }} \
           --region=europe-central2 \
           --runtime=python311 \
-          --memory=256MB \
+          --memory=256MiB \
           --timeout=60s \
           --min-instances=0 \
           --max-instances=2 \
           --entry-point=record \
           --trigger-http \
-          --allow-unauthenticated
+          --allow-unauthenticated \
+          --set-secrets='env_1=secret_1','TABLE=${{ secrets.TABLE }}'

@@ -1,11 +1,10 @@
 import functions_framework
 
-# from google.cloud import bigquery
+from google.cloud import bigquery
 from datetime import datetime
 
-# from dotenv.main import dotenv_values
-
-# config = dotenv_values(".env")
+from dotenv.main import dotenv_values
+config = dotenv_values(".env")
 
 
 # def record_data(raw: dict) -> tuple:
@@ -44,12 +43,15 @@ def record(request):
     request_json = request.get_json(silent=True)
     request_args = request.args
 
-    if request_json and 'temperature' in request_json:
-        # return record_data({'temperature': request_json['temperature']})
-        return f"Temperature received ({request_json['temperature']} degree)"
+    # if request_json and 'temperature' in request_json:
+    #     return f"Temperature received ({request_json['temperature']} degree)"
 
-    elif request_args and 'temperature' in request_args:
+    if request_args and 'temperature' in request_args:
         # return record_data({'temperature': request_args['temperature']})
         return f"Temperature received ({request_args['temperature']} degree)"
+
+    if request_args and 'get_table' in request_args:
+        # return record_data({'temperature': request_args['temperature']})
+        return f"Table from env: {config['TABLE']}"
 
     return 'Try one more time ...'
