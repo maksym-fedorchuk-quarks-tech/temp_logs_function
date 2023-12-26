@@ -38,4 +38,4 @@ jobs:
           --entry-point=record \
           --trigger-http \
           --allow-unauthenticated \
-          --set-secrets='env_1=secret_1','TABLE=${{ secrets.TABLE }}'
+          --set-secrets='env_1=secret_1:latest','TABLE=${{ secrets.TABLE }}:latest'
