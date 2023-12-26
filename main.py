@@ -13,10 +13,11 @@ def record_data(temp: str) -> tuple:
         print('record_data raw input:', temp)
 
         # Init BigQuery
-        client = bigquery.Client()
-        bigquery_client = bigquery.Client()
-        dataset_ref = bigquery_client.dataset(os.environ.get('DATASET'))
+        client = bigquery.client.Client()
+        dataset_ref = client.dataset(os.environ.get('DATASET'))
         table_ref = dataset_ref.table(os.environ.get('TABLE'))
+
+        print('table_ref:', table_ref, '\n')
 
         # Insert rows
         errors = client.insert_rows(
