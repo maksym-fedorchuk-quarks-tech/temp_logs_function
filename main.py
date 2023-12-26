@@ -8,30 +8,25 @@ from google.cloud import bigquery
 load_dotenv()
 
 
-def record_data(raw: dict) -> tuple:
+def record_data(temp: str) -> tuple:
     try:
-        print('record_data raw input:', raw)
+        print('record_data raw input:', temp)
 
         # Init BigQuery
         client = bigquery.Client()
-
-        # Get BigQuery table link
-        dataset_ref = os.environ.get('DATASET')
+        bigquery_client = bigquery.Client()
+        dataset_ref = bigquery_client.dataset(os.environ.get('DATASET'))
         table_ref = dataset_ref.table(os.environ.get('TABLE'))
-        table = client.get_table(table_ref)
-
-        # Data for table
-        rows_to_insert = [
-            {'dt': datetime.utcnow(), 'location': 'home', 'sensor_id': 1, 'scale': 'celsius', 'temperature': 0}
-        ]
 
         # Insert rows
-        errors = client.insert_rows(table, rows_to_insert)
+        errors = client.insert_rows(
+            table_ref,
+            [{'dt': datetime.utcnow(), 'location': 'home', 'sensor_id': 1, 'scale': 'celsius', 'temperature': temp}]
+        )
 
         if errors:
             raise Exception(f'Error inserting rows: {errors}')
 
-        # Ok. 200
         return 'Data successfully written to BigQuery.', 200
 
     except Exception as e:
@@ -45,7 +40,7 @@ def record(request):
     request_args = request.args
 
     if request_args and 'temperature' in request_args:
-        return record_data({'temperature': request_args['temperature']})
+        return record_data(request_args['temperature'])
 
     if request_args and 'get_table' in request_args:
         return f"Table from env: {os.environ.get('TABLE')}"
