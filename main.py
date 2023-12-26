@@ -52,6 +52,6 @@ def record(request):
 
     if request_args and 'get_table' in request_args:
         # return record_data({'temperature': request_args['temperature']})
-        return f"Table from env: {config['TABLE']}"
+        return f"Table from env: {config}"
 
     return 'Try one more time ...'

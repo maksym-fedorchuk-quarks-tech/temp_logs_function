@@ -39,4 +39,4 @@ jobs:
           --trigger-http \
           --allow-unauthenticated \
           --clear-secrets \
-          --set-env-vars 'FOO=bar','TABLE=${{ secrets.TABLE }}'
+          --set-env-vars 'DATASET=${{ secrets.TABLE }}','TABLE=${{ secrets.DATASET }}'
