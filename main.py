@@ -8,7 +8,7 @@ from google.cloud import bigquery
 load_dotenv()
 
 
-def record_data(temp: str) -> tuple:
+def record_data(temp: int, location: str) -> tuple:
     try:
         # Init BigQuery
         client = bigquery.client.Client()
@@ -18,7 +18,7 @@ def record_data(temp: str) -> tuple:
         # Insert rows
         errors = client.insert_rows(
             table,
-            [{'dt': datetime.utcnow(), 'location': 'home', 'sensor_id': 1, 'scale': 'celsius', 'temperature': temp}]
+            [{'dt': datetime.utcnow(), 'location': location, 'sensor_id': 1, 'scale': 'celsius', 'temperature': temp}]
         )
 
         if errors:
@@ -35,10 +35,11 @@ def record_data(temp: str) -> tuple:
 def record(request):
     request_args = request.args
 
-    if request_args and 'temperature' in request_args:
-        return record_data(request_args['temperature'])
+    if request_args and 'temperature' in request_args and 'location' in request_args:
+        return record_data(request_args['temperature'], request_args['temperature'])
 
-    if request_args and 'get_table' in request_args:
-        return f"Table from env: {os.environ.get('TABLE')}"
+    if request_args and 'readme' in request_args:
+        return "Endpoint for logging temperature data to the BigQuery. Pass temperature:int and location: str as a " \
+               "params at current endpoint POST request"
 
-    return 'Try one more time ...'
+    return 'Following params needed: temperature & location. More info - send readme as a parameter'
