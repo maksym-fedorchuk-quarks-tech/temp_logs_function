@@ -16,8 +16,6 @@ def record_data(temp: str) -> tuple:
         table = client.get_table(table_ref)
 
         # Insert rows
-        print(client.get_table())
-
         errors = client.insert_rows(
             table,
             [{'dt': datetime.utcnow(), 'location': 'home', 'sensor_id': 1, 'scale': 'celsius', 'temperature': temp}]
