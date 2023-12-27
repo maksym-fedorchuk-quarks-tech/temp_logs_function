@@ -36,7 +36,7 @@ def record(request):
     request_args = request.args
 
     if request_args and 'temperature' in request_args and 'location' in request_args:
-        return record_data(request_args['temperature'], request_args['temperature'])
+        return record_data(request_args['temperature'], request_args['location'])
 
     if request_args and 'readme' in request_args:
         return "Endpoint for logging temperature data to the BigQuery. Pass temperature:int and location: str as a " \
