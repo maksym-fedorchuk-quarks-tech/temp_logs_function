@@ -12,8 +12,7 @@ def record_data(temp: str) -> tuple:
     try:
         # Init BigQuery
         client = bigquery.client.Client()
-        dataset_ref = client.dataset(os.environ.get('DATASET'))
-        table_ref = dataset_ref.table(os.environ.get('TABLE'))
+        table_ref = client.dataset(os.environ.get('DATASET')).table(os.environ.get('TABLE'))
 
         # Insert rows
         print(client.get_table())
@@ -30,7 +29,7 @@ def record_data(temp: str) -> tuple:
 
     except Exception as e:
         print(f'Error: {e}')
-        # Обробка помилок та відповідь на невдале виконання
+        # Return Error
         return 'Error writing data to BigQuery.', 500
 
 
