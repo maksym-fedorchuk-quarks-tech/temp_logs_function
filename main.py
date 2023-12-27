@@ -13,23 +13,23 @@ def record_data(temp: str) -> tuple:
         # Init BigQuery
         client = bigquery.client.Client()
         table_ref = client.dataset(os.environ.get('DATASET')).table(os.environ.get('TABLE'))
+        table = client.get_table(table_ref)
 
         # Insert rows
         print(client.get_table())
 
         errors = client.insert_rows(
-            table_ref,
+            table,
             [{'dt': datetime.utcnow(), 'location': 'home', 'sensor_id': 1, 'scale': 'celsius', 'temperature': temp}]
         )
 
         if errors:
-            raise Exception(f'Error inserting rows: {errors}')
+            raise Exception(f'Exception during inserting rows: {errors}')
 
         return 'Data successfully written to BigQuery.', 200
 
     except Exception as e:
         print(f'Error: {e}')
-        # Return Error
         return 'Error writing data to BigQuery.', 500
 
 
